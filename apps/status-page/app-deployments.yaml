@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: status-page-web
+  namespace: status-page
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: status-page-web
+  template:
+    metadata:
+      labels:
+        app: status-page-web
+    spec:
+      containers:
+      - name: status-page
+        image: amitarie/status-page:latest
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: status-page-service
+  namespace: status-page
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8000
+  selector:
+    app: status-page-web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: status-page-rq
+  namespace: status-page
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: status-page-rq
+  template:
+    metadata:
+      labels:
+        app: status-page-rq
+    spec:
+      containers:
+      - name: rq-worker
+        image: amitarie/status-page:latest
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: status-page-scheduler
+  namespace: status-page
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: status-page-scheduler
+  template:
+    metadata:
+      labels:
+        app: status-page-scheduler
+    spec:
+      containers:
+      - name: scheduler
+        image: amitarie/status-page:latest
