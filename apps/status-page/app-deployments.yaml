@@ -50,6 +50,8 @@ spec:
       containers:
       - name: rq-worker
         image: amitarie/status-page:latest
+        command: ["/bin/sh", "-c"]
+        args: ["while true; do python3 manage.py rqworker; echo Worker exited, restarting in 2s...; sleep 2; done"]
 ---
 apiVersion: apps/v1
 kind: Deployment
