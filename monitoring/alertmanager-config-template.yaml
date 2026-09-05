@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: alertmanager-monitoring-kube-prometheus-alertmanager
+  namespace: monitoring
+type: Opaque
+stringData:
+  alertmanager.yaml: |
+    global:
+      resolve_timeout: 5m
+      smtp_smarthost: 'smtp.gmail.com:587'
+      smtp_from: 'amitarie.aa@gmail.com'
+      smtp_auth_username: 'amitarie.aa@gmail.com'
+      smtp_auth_password: '<GMAIL_APP_PASSWORD>'
+      smtp_require_tls: true
+
+    route:
+      group_by: ['alertname', 'namespace']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: 'email-receiver'
+      routes:
+      - receiver: 'null-receiver'
+        matchers:
+          - alertname =~ "Watchdog|KubeSchedulerDown|KubeControllerManagerDown|KubeProxyDown|TargetDown"
+
+    receivers:
+    - name: 'null-receiver'
+    - name: 'email-receiver'
+      email_configs:
+      - to: 'amitarie.aa@gmail.com'
+        send_resolved: true
