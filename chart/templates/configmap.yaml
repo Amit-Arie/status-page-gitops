@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: status-page-config
+  namespace: status-page
+data:
+  configuration.py: |
+    import os
+
+    SECRET_KEY = 'insecure-secret-key-for-project'
+    DEBUG = True
+    ALLOWED_HOSTS = ['*']
+    SITE_URL = 'http://localhost'
+
+    DATABASE = {
+        'NAME': 'statuspage',
+        'USER': 'statuspage',
+        'PASSWORD': 'statuspage_pass123',
+        'HOST': 'postgresql',
+        'PORT': 5432,
+    }
+
+    REDIS = {
+        'tasks': {
+            'HOST': 'redis-node-0.redis-headless',
+            'PORT': 6379,
+            'PASSWORD': 'redis_pass123',
+            'DB': 0,
+            'DEFAULT_TIMEOUT': 300,
+            'SSL': False,
+        },
+        'caching': {
+            'HOST': 'redis-node-0.redis-headless',
+            'PORT': 6379,
+            'PASSWORD': 'redis_pass123',
+            'DB': 1,
+            'DEFAULT_TIMEOUT': 300,
+            'SSL': False,
+        }
+    }

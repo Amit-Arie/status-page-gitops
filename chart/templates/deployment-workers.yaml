@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: status-page-scheduler
+  namespace: status-page
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: status-page-scheduler
+  template:
+    metadata:
+      labels:
+        app: status-page-scheduler
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: {{ .Values.agentNodeName }}
+      imagePullSecrets:
+        - name: ecr-secret
+      containers:
+        - name: scheduler
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          workingDir: /opt/status-page/statuspage
+          command: ["python3", "manage.py", "rqscheduler"]
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/status-page/statuspage/statuspage/configuration.py
+              subPath: configuration.py
+      volumes:
+        - name: config-volume
+          configMap:
+            name: status-page-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: status-page-rq
+  namespace: status-page
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: status-page-rq
+  template:
+    metadata:
+      labels:
+        app: status-page-rq
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: {{ .Values.agentNodeName }}
+      imagePullSecrets:
+        - name: ecr-secret
+      containers:
+        - name: rqworker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          workingDir: /opt/status-page/statuspage
+          command: ["python3", "manage.py", "rqworker"]
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/status-page/statuspage/statuspage/configuration.py
+              subPath: configuration.py
+      volumes:
+        - name: config-volume
+          configMap:
+            name: status-page-config

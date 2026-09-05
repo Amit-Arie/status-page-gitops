@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: status-page-web
+  namespace: status-page
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: status-page-web
+  template:
+    metadata:
+      labels:
+        app: status-page-web
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: {{ .Values.agentNodeName }}
+      imagePullSecrets:
+        - name: ecr-secret
+      containers:
+        - name: web
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          workingDir: /opt/status-page/statuspage
+          command: ["gunicorn", "-b", "0.0.0.0:8000", "statuspage.wsgi:application"]
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/status-page/statuspage/statuspage/configuration.py
+              subPath: configuration.py
+      volumes:
+        - name: config-volume
+          configMap:
+            name: status-page-config

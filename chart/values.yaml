@@ -1,0 +1,6 @@
+agentNodeName: "ip-10-0-101-204"
+replicaCount: 2
+image:
+  repository: "992382545251.dkr.ecr.us-east-1.amazonaws.com/team-project-app"
+  tag: "latest"
+  pullPolicy: Always
