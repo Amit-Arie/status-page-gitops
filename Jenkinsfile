@@ -59,6 +59,7 @@ spec:
                           --dockerfile=${WORKSPACE}/app/Dockerfile \
                           --destination=${ECR_REPO}:${IMAGE_TAG} \
                           --destination=${ECR_REPO}:latest
+			  --snapshot-mode=redo
                     '''
                 }
             }
