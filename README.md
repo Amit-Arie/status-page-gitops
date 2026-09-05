@@ -17,12 +17,12 @@ Complete production-ready infrastructure, GitOps deployment, High Availability, 
 
 ## 📁 Repository Structure
 
-status-page-gitops/
-├── apps/
-│   └── status-page/            # Core deployment manifests (Web, RQ, Scheduler, DBs, Ingress)
-├── argocd/                     # ArgoCD Application definitions for GitOps sync
-├── ha/                         # PodDisruptionBudget (PDB) configurations
-└── monitoring/                 # Alertmanager notification templates and rules
+* **`app/`** - Application source code & Dockerfile (Django/RQ)
+* **`chart/`** - Helm chart packaging and values
+* **`apps/status-page/`** - Kubernetes deployment manifests (Web, RQ, DBs, Ingress)
+* **`argocd/`** - ArgoCD Application definitions for GitOps continuous delivery
+* **`ha/`** - High Availability configurations (PodDisruptionBudget)
+* **`monitoring/`** - Observability configs, Alertmanager templates, and alert routing
 
 ---
 
