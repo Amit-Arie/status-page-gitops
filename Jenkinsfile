@@ -89,14 +89,16 @@ spec:
                     // Uses the agent node's IAM role (via instance metadata) —
                     // no stored AWS credentials needed. Written to the shared
                     // workspace so the docker-cmd container can read it next.
+                    // Quoted "${WORKSPACE}" — job names with spaces (like this
+                    // one) otherwise get word-split into two bad paths.
                     sh '''
-                        aws ecr get-login-password --region ${AWS_REGION} > ${WORKSPACE}/.ecr_pw
+                        aws ecr get-login-password --region ${AWS_REGION} > "${WORKSPACE}/.ecr_pw"
                     '''
                 }
                 container('docker-cmd') {
                     sh '''
-                        cat ${WORKSPACE}/.ecr_pw | docker login --username AWS --password-stdin ${ECR_REPO}
-                        rm -f ${WORKSPACE}/.ecr_pw
+                        cat "${WORKSPACE}/.ecr_pw" | docker login --username AWS --password-stdin ${ECR_REPO}
+                        rm -f "${WORKSPACE}/.ecr_pw"
                     '''
                 }
             }
@@ -106,7 +108,7 @@ spec:
             steps {
                 container('docker-cmd') {
                     sh '''
-                        docker build -t ${ECR_REPO}:${IMAGE_TAG} -t ${ECR_REPO}:latest -f ${WORKSPACE}/app/Dockerfile ${WORKSPACE}/app
+                        docker build -t ${ECR_REPO}:${IMAGE_TAG} -t ${ECR_REPO}:latest -f "${WORKSPACE}/app/Dockerfile" "${WORKSPACE}/app"
                         docker push ${ECR_REPO}:${IMAGE_TAG}
                         docker push ${ECR_REPO}:latest
                     '''
