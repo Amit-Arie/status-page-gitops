@@ -29,5 +29,5 @@ stringData:
     - name: 'null-receiver'
     - name: 'email-receiver'
       email_configs:
-      - to: 'amitarie.aa@gmail.com'
+      - to: 'amitarie.aa@gmail.com, Sdasha13520@gmail.com'
         send_resolved: true
