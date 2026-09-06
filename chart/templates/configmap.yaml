@@ -8,7 +8,7 @@ data:
     import os
 
     SECRET_KEY = 'insecure-secret-key-for-project'
-    DEBUG = True
+    DEBUG = False
     ALLOWED_HOSTS = ['*']
     SITE_URL = 'http://localhost'
 
