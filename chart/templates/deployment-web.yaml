@@ -13,8 +13,6 @@ spec:
       labels:
         app: status-page-web
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: {{ .Values.agentNodeName }}
       imagePullSecrets:
         - name: ecr-secret
       containers:

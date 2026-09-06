@@ -13,8 +13,6 @@ spec:
       labels:
         app: status-page-scheduler
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: {{ .Values.agentNodeName }}
       imagePullSecrets:
         - name: ecr-secret
       containers:
@@ -47,8 +45,6 @@ spec:
       labels:
         app: status-page-rq
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: {{ .Values.agentNodeName }}
       imagePullSecrets:
         - name: ecr-secret
       containers:
